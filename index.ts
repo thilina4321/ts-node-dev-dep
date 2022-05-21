@@ -1,14 +1,13 @@
-import express, { Request, Response } from "express";
-const app = express();
+import { connect } from "mongoose";
+import { app } from "./src/app";
 
-app.use(express.json());
+const port = process.env.PORT || 4000;
+const dbConnectionUrl = process.env.DB_CONNECTION_URL || "mongodb://127.0.0.1:27017/car-managment"
 
-app.get("/app", (req: Request, res: Response) => {
-  res.send({ data: "this is the response" });
-});
-
-const PORT = process.env.PORT || 80
-
-app.listen(PORT, () => {
-  console.log("server listern in port 3000");
-});
+connect(dbConnectionUrl)
+  .then(() => {
+    app.listen(port, () => {
+      console.log("application starts with port ", port);
+    });
+  })
+  .catch(() => console.log("unable to connect to the db"));
